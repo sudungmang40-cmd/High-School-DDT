@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>QuảnLý HọcPhí – THPT Đào Duy Từ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Be Vietnam Pro','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+      colors: {
+        navy:  { 50:'#eef2ff',100:'#dde6ff',400:'#6088d4',600:'#1F4E79',700:'#17406a',800:'#122f52',900:'#0a1e35' },
+        jade:  { 400:'#34a87c',500:'#1F7A4D',600:'#195f3c',700:'#124430' },
+        amber: { 400:'#f59e0b',500:'#d97706',100:'#fef3c7' },
+        rose:  { 400:'#f43f5e',500:'#C00000',100:'#fff1f2' },
+      }
+    }
+  }
+}
+</script>
+<style>
+*{box-sizing:border-box}
+:root{
+  --navy:#1F4E79;--jade:#1F7A4D;--gold:#d97706;--rose:#C00000;
+  --bg:#f0f4f8;--card:#fff;--border:#e2e8f0;--text:#1a202c;--muted:#64748b;
+}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);margin:0;min-height:100vh}
+
+/* Sidebar */
+#sidebar{
+  position:fixed;top:0;left:0;height:100vh;width:240px;
+  background:linear-gradient(180deg,#0a1e35 0%,#17406a 60%,#122f52 100%);
+  display:flex;flex-direction:column;z-index:100;transition:transform .3s;
+  box-shadow:4px 0 20px rgba(0,0,0,.3);
+}
+#sidebar.closed{transform:translateX(-240px)}
+.sidebar-logo{
+  padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.1);
+}
+.sidebar-logo h1{font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase;margin:0;line-height:1.3}
+.sidebar-logo p{font-size:10px;color:#94b5d0;margin:3px 0 0;letter-spacing:.04em}
+.nav-section{padding:10px 10px 4px;font-size:9px;font-weight:700;color:#5080a0;letter-spacing:.12em;text-transform:uppercase}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 18px;
+  font-size:12.5px;font-weight:500;color:#94b5d0;cursor:pointer;
+  border-radius:0;transition:all .2s;position:relative;border-left:3px solid transparent;
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-item.active{background:rgba(31,78,121,.6);color:#fff;border-left-color:#6bb5e8}
+.nav-item .icon{font-size:15px;min-width:20px;text-align:center}
+.sidebar-footer{margin-top:auto;padding:16px 18px;border-top:1px solid rgba(255,255,255,.1)}
+.sidebar-footer p{font-size:10px;color:#5080a0;margin:0;text-align:center}
+
+/* Main content */
+#main{margin-left:240px;min-height:100vh;transition:margin .3s}
+#main.full{margin-left:0}
+
+/* Topbar */
+.topbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 24px;height:56px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.topbar-title{font-size:15px;font-weight:700;color:#1a202c}
+.topbar-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
+  border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;
+}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:#17406a}
+.btn-success{background:var(--jade);color:#fff}
+.btn-success:hover{background:#195f3c}
+.btn-danger{background:var(--rose);color:#fff}
+.btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.btn-outline:hover{background:#eef2ff}
+.btn-ghost{background:transparent;color:var(--muted);padding:7px 10px}
+.btn-ghost:hover{background:#f1f5f9;color:#1a202c}
+.btn-sm{padding:5px 10px;font-size:11px}
+
+/* Cards */
+.card{background:#fff;border-radius:12px;border:1px solid var(--border);padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:700;color:#1a202c;text-transform:uppercase;letter-spacing:.04em}
+
+/* Stats cards */
+.stat-card{
+  background:#fff;border-radius:12px;padding:18px;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.stat-card.navy::before{background:var(--navy)}
+.stat-card.jade::before{background:var(--jade)}
+.stat-card.gold::before{background:var(--gold)}
+.stat-card.rose::before{background:var(--rose)}
+.stat-icon{font-size:28px;margin-bottom:10px}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:#1a202c;margin-bottom:3px}
+.stat-label{font-size:11px;color:var(--muted);font-weight:500}
+.stat-sub{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* Table */
+.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:#f8fafc}
+thead th{
+  padding:10px 14px;text-align:left;font-size:10.5px;font-weight:700;
+  color:var(--muted);letter-spacing:.06em;text-transform:uppercase;
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+tbody tr{border-bottom:1px solid #f1f5f9;transition:background .1s;cursor:pointer}
+tbody tr:hover{background:#f8faff}
+tbody tr:last-child{border-bottom:none}
+td{padding:10px 14px;vertical-align:middle}
+.td-name{font-weight:600;color:#1a202c;font-size:12.5px}
+.td-sub{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:.03em}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-red{background:#ffe4e6;color:#9f1239}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-yellow{background:#fef3c7;color:#92400e}
+.badge-gray{background:#f1f5f9;color:#475569}
+.badge-purple{background:#ede9fe;color:#6d28d9}
+
+/* Amount formatter */
+.amt{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;white-space:nowrap}
+.amt-red{color:#C00000}
+.amt-green{color:#1F7A4D}
+.amt-navy{color:#1F4E79}
+
+/* Progress bar */
+.progress{height:5px;background:#f1f5f9;border-radius:99px;overflow:hidden}
+.progress-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,#1F4E79,#6088d4);transition:width .5s}
+
+/* Forms */
+.form-group{margin-bottom:14px}
+.form-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:block}
+.form-input{
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:13px;font-family:'Be Vietnam Pro',sans-serif;transition:border-color .15s;
+  background:#fff;color:#1a202c;
+}
+.form-input:focus{outline:none;border-color:var(--navy)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+
+/* Modal */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:#fff;border-radius:16px;width:100%;max-width:580px;max-height:85vh;
+  display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.15);
+  animation:modalIn .2s ease;overflow:hidden;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal-header{
+  padding:20px 24px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-title{font-size:15px;font-weight:700;color:#1a202c}
+.modal-body{padding:20px 24px;overflow-y:auto;flex:1}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+
+/* Tab */
+.tab-bar{display:flex;gap:2px;background:#f1f5f9;padding:4px;border-radius:10px;margin-bottom:18px}
+.tab-item{padding:8px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted);white-space:nowrap}
+.tab-item.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+/* Hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:none}
+.hamburger span{display:block;width:22px;height:2px;background:#1a202c;border-radius:2px;transition:all .2s}
+
+/* Search */
+.search-wrap{position:relative;flex:1;max-width:280px}
+.search-wrap input{padding-left:34px}
+.search-wrap .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
+
+/* Alert */
+.alert{padding:10px 14px;border-radius:8px;font-size:12px;font-weight:500;margin-bottom:14px;border-left:3px solid}
+.alert-info{background:#eff6ff;border-color:#3b82f6;color:#1e40af}
+.alert-warn{background:#fffbeb;border-color:#f59e0b;color:#92400e}
+.alert-success{background:#f0fdf4;border-color:#22c55e;color:#166534}
+
+/* KHO section */
+.kho-card{
+  background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  transition:transform .15s,box-shadow .15s;
+}
+.kho-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.kho-header{padding:14px 16px;background:#f8fafc;border-bottom:1px solid var(--border)}
+.kho-body{padding:14px 16px}
+.kho-stat{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.kho-bar{height:6px;background:#f1f5f9;border-radius:99px;overflow:hidden;margin-top:8px}
+.kho-bar-fill{height:100%;border-radius:99px;transition:width .5s}
+
+/* Responsive */
+@media(max-width:768px){
+  #sidebar{transform:translateX(-240px)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  .hamburger{display:flex}
+  .stat-grid{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:480px){
+  .stat-grid{grid-template-columns:1fr!important}
+  .topbar{padding:0 14px}
+}
+
+/* Page transitions */
+.page{display:none;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Print */
+@media print{
+  #sidebar,#main>.topbar,.btn,.tab-bar{display:none!important}
+  #main{margin-left:0}
+  .card{box-shadow:none;border:1px solid #ddd}
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <h1>🏫 THPT Đào Duy Từ</h1>
+    <p>Hệ thống quản lý học phí</p>
+  </div>
+  <div style="overflow-y:auto;flex:1">
+    <div class="nav-section">Tổng quan</div>
+    <div class="nav-item active" onclick="nav('dashboard')"><span class="icon">📊</span>Dashboard</div>
+    
+    <div class="nav-section">Học sinh</div>
+    <div class="nav-item" onclick="nav('students')"><span class="icon">👥</span>Danh sách học sinh</div>
+    <div class="nav-item" onclick="nav('debtors')"><span class="icon">⚠️</span>Học sinh còn nợ</div>
+    
+    <div class="nav-section">Tài chính</div>
+    <div class="nav-item" onclick="nav('baocao')"><span class="icon">📋</span>Báo cáo tháng</div>
+    <div class="nav-item" onclick="nav('chi')"><span class="icon">💸</span>Sổ chi tiết chi</div>
+    
+    <div class="nav-section">Kho</div>
+    <div class="nav-item" onclick="nav('kho')"><span class="icon">📦</span>Tổng hợp kho</div>
+    
+    <div class="nav-section">Danh mục</div>
+    <div class="nav-item" onclick="nav('danhmuc')"><span class="icon">📑</span>Danh mục thu</div>
+    
+    <div class="nav-section">Công cụ</div>
+    <div class="nav-item" onclick="nav('deploy')"><span class="icon">☁️</span>Hướng dẫn triển khai</div>
+  </div>
+  <div class="sidebar-footer">
+    <p>v1.0 · Năm học 2025–2026</p>
+  </div>
+</nav>
+
+<!-- Main content -->
+<div id="main">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <div>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-sub">THPT Đào Duy Từ · Tháng 08/2025</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-outline btn-sm" onclick="exportCSV()">⬇ Xuất CSV</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddPayment()">+ Ghi nhận thu</button>
+    </div>
+  </div>
+
+  <!-- Content area -->
+  <div style="padding:20px 24px">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="stat-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+        <div class="stat-card navy">
+          <div class="stat-icon">💰</div>
+          <div class="stat-val" id="s-tong">582,522,000</div>
+          <div class="stat-label">Tổng phải thu</div>
+          <div class="stat-sub">103 học sinh · T08/2025</div>
+        </div>
+        <div class="stat-card jade">
+          <div class="stat-icon">✅</div>
+          <div class="stat-val" id="s-dathu">443,995,000</div>
+          <div class="stat-label">Đã thu được</div>
+          <div class="stat-sub" id="s-pct">76.2% tổng thu</div>
+        </div>
+        <div class="stat-card rose">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-val" id="s-con">138,527,000</div>
+          <div class="stat-label">Còn phải thu</div>
+          <div class="stat-sub" id="s-no">34 học sinh còn nợ</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-icon">📚</div>
+          <div class="stat-val">103</div>
+          <div class="stat-label">Học sinh</div>
+          <div class="stat-sub">6 lớp · K10/K11/K12</div>
+        </div>
+      </div>
+
+      <!-- Progress + Chart row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📈 Thu theo lớp</span>
+            <span class="badge badge-blue">T08/2025</span>
+          </div>
+          <div id="chart-class"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📊 Thu theo hình thức</span>
+          </div>
+          <div id="chart-hinhthuc"></div>
+        </div>
+      </div>
+
+      <!-- Recent + Debtors -->
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">⚠️ Học sinh còn nợ nhiều nhất</span>
+            <button class="btn btn-ghost btn-sm" onclick="nav('debtors')">Xem tất cả →</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Họ tên</th><th>Lớp</th><th>Phải thu</th><th>Còn nợ</th><th>Trạng thái</th>
+              </tr></thead>
+              <tbody id="top-debtors"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📦 Tồn kho vật dụng</span>
+          </div>
+          <div id="kho-mini"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENTS -->
+    <div class="page" id="page-students">
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select class="form-input form-select" style="width:110px;padding:8px 28px 8px 10px;font-size:12px" id="filter-class" onchange="renderStudents()">
+              <option value="">Tất cả lớp</option>
+              <option>10A1</option><option>10A2</option>
+              <option>11A1</option><option>11A2</option>
+              <option>12A1</option><option>12A2</option>
+            </select>
+            <select class="form-input form-select" style="width:130px;padding:8px 28px 8px 10px;font-size:12px" id="filter-status" onchange="renderStudents()">
+              <option value="">Tất cả</option>
+              <option value="paid">Đã đóng đủ</option>
+              <option value="debt">Còn nợ</option>
+            </select>
+          </div>
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="form-input" id="search-student" placeholder="Tìm tên học sinh..." oninput="renderStudents()" style="padding-left:34px;font-size:12px"/>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">👥 Danh sách học sinh (<span id="student-count">103</span>)</span>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-ghost btn-sm" onclick="printStudents()">🖨 In</button>
+            <button class="btn btn-success btn-sm" onclick="exportCSV()">⬇ Excel</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th><th>Họ và tên</th><th>Lớp</th><th>Hình thức</th>
+              <th>Phải thu</th><th>Đã thu</th><th>Còn nợ</th><th>Trạng thái</th><th></th>
+            </tr></thead>
+            <tbody id="student-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEBTORS -->
+    <div class="page" id="page-debtors">
+      <div class="alert alert-warn">⚠️ Có <strong id="debt-count">34</strong> học sinh chưa đóng đủ học phí. Tổng còn nợ: <strong id="debt-total">138,527,000 đ</strong></div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚠️ Học sinh còn nợ</span>
+          <button class="btn btn-primary btn-sm" onclick="exportDebtors()">⬇ Xuất danh sách nợ</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th><th>Họ và tên</th><th>Lớp</th><th>Hình thức</th>
+              <th>Phải thu</th><th>Đã thu</th><th>Còn nợ</th><th>% Đã đóng</th>
+            </tr></thead>
+            <tbody id="debtors-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- BAOCAO -->
+    <div class="page" id="page-baocao">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+        <div class="stat-card jade">
+          <div class="stat-icon">📥</div>
+          <div class="stat-val" id="bc-thu">302,252,000</div>
+          <div class="stat-label">Tổng thu tháng</div>
+        </div>
+        <div class="stat-card rose">
+          <div class="stat-icon">📤</div>
+          <div class="stat-val" id="bc-chi">0</div>
+          <div class="stat-label">Tổng chi tháng</div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item active" onclick="switchTab('thu')">📥 THU</div>
+        <div class="tab-item" onclick="switchTab('chi')">📤 CHI</div>
+      </div>
+      <div class="card" id="tab-thu">
+        <div class="card-header">
+          <span class="card-title">📥 Chi tiết thu tháng 08/2025</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Mã DM</th><th>Tên khoản thu</th><th>Số tiền</th><th>Tỷ lệ</th></tr></thead>
+            <tbody id="bc-thu-table"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" id="tab-chi" style="display:none">
+        <div class="card-header">
+          <span class="card-title">📤 Chi tiết chi tháng 08/2025</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Mã DM</th><th>Tên khoản chi</th><th>Số tiền</th></tr></thead>
+            <tbody id="bc-chi-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHI -->
+    <div class="page" id="page-chi">
+      <div class="card" style="margin-bottom:14px">
+        <div class="alert alert-info">💡 Nhập chứng từ chi tiêu vào đây. Dữ liệu lưu vào bộ nhớ trình duyệt (localStorage) và không mất khi tải lại trang.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr) auto;gap:10px;align-items:end">
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Ngày</label>
+            <input class="form-input" type="date" id="chi-ngay" style="font-size:12px"/>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Mã DM</label>
+            <select class="form-input form-select" id="chi-ma" style="padding:9px 28px 9px 10px;font-size:12px">
+              <option value="CHI-LG">CHI-LG · Lương CBGV</option>
+              <option value="CHI-CV">CHI-CV · Vận hành CSVC</option>
+              <option value="CHI-ĂN">CHI-ĂN · Tiền ăn HS</option>
+              <option value="CHI-BH">CHI-BH · BHXH/BHYT</option>
+              <option value="CHI-MS">CHI-MS · Mua sắm TB</option>
+              <option value="CHI_VPP">CHI_VPP · VPP</option>
+              <option value="CHI-NH">CHI-NH · Phí NH</option>
+              <option value="CHI-KH">CHI-KH · Chi khác</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Nội dung</label>
+            <input class="form-input" id="chi-noidung" placeholder="Mô tả..." style="font-size:12px"/>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Số tiền (đ)</label>
+            <input class="form-input" type="number" id="chi-sotien" placeholder="500000" style="font-size:12px"/>
+          </div>
+          <button class="btn btn-success" onclick="addChi()" style="margin-bottom:0">+ Thêm</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💸 Sổ chi tiết chi (<span id="chi-count">0</span> phiếu)</span>
+          <div style="display:flex;gap:6px">
+            <span class="badge badge-blue" id="chi-sum-badge">Tổng: 0 đ</span>
+            <button class="btn btn-ghost btn-sm" onclick="clearChi()" style="color:#c00">Xóa tất cả</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Ngày</th><th>Mã DM</th><th>Nội dung</th><th>Số tiền</th><th></th></tr></thead>
+            <tbody id="chi-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHO -->
+    <div class="page" id="page-kho">
+      <div class="alert alert-info">📦 Nhập kho: ghi tay khi nhận hàng. Xuất kho: tính từ học sinh đã thanh toán (data Excel). Tồn = Đầu + Nhập – Xuất. Dữ liệu lưu trình duyệt.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px" id="kho-grid"></div>
+    </div>
+
+    <!-- DANHMUC -->
+    <div class="page" id="page-danhmuc">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📑 Danh mục thu – Chi (<span id="dm-count">0</span> mục)</span>
+          <div class="search-wrap" style="max-width:220px">
+            <span class="search-icon">🔍</span>
+            <input class="form-input" id="search-dm" placeholder="Tìm mã / tên..." oninput="renderDM()" style="padding-left:34px;font-size:12px"/>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>STT</th><th>Mã DM</th><th>Tên khoản</th><th>Giá K10</th><th>Giá K11</th><th>Giá K12</th></tr></thead>
+            <tbody id="dm-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPLOY guide -->
+    <div class="page" id="page-deploy">
+      <div class="alert alert-success">🎉 Ứng dụng này chạy 100% trên trình duyệt. Không cần cài đặt. Để nhiều người dùng cùng lúc, upload lên dịch vụ hosting miễn phí.</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="card" style="border-top:4px solid #1F4E79">
+          <div style="font-size:22px;margin-bottom:10px">⚡ Vercel</div>
+          <div class="badge badge-green" style="margin-bottom:12px">Miễn phí · Nhanh nhất · Khuyến nghị</div>
+          <p style="font-size:12px;color:var(--muted);margin:0 0 14px;line-height:1.6">Hosting tĩnh miễn phí. Tốc độ CDN toàn cầu. Tự động HTTPS.</p>
+          <div style="font-size:12px;line-height:2">
+            <b>Bước 1.</b> Vào <a href="https://vercel.com" target="_blank" style="color:#1F4E79;font-weight:700">vercel.com</a> → <b>Sign Up</b><br>
+            <b>Bước 2.</b> Chọn "Continue with GitHub" (tạo GitHub nếu chưa có)<br>
+            <b>Bước 3.</b> Click <b>Add New Project → Upload</b><br>
+            <b>Bước 4.</b> Kéo thả thư mục <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px">school-app</code> vào<br>
+            <b>Bước 5.</b> Click <b>Deploy</b> → Chờ 30 giây → Nhận link 🎉
+          </div>
+          <a href="https://vercel.com/new" target="_blank" class="btn btn-primary" style="margin-top:14px;display:inline-flex">🚀 Mở Vercel ngay</a>
+        </div>
+
+        <div class="card" style="border-top:4px solid #1F7A4D">
+          <div style="font-size:22px;margin-bottom:10px">📄 GitHub Pages</div>
+          <div class="badge badge-blue" style="margin-bottom:12px">Miễn phí · Dễ cập nhật</div>
+          <p style="font-size:12px;color:var(--muted);margin:0 0 14px;line-height:1.6">Hosting trực tiếp từ GitHub. Cập nhật = commit file mới.</p>
+          <div style="font-size:12px;line-height:2">
+            <b>Bước 1.</b> Vào <a href="https://github.com" target="_blank" style="color:#1F4E79;font-weight:700">github.com</a> → <b>Sign Up</b><br>
+            <b>Bước 2.</b> Click <b>New repository</b>, đặt tên <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px">school-hp</code>, chọn Public<br>
+            <b>Bước 3.</b> Upload file <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px">index.html</code> lên repo<br>
+            <b>Bước 4.</b> Settings → Pages → Source: <b>main</b> branch<br>
+            <b>Bước 5.</b> Link: <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px">tenban.github.io/school-hp</code>
+          </div>
+          <a href="https://github.com/new" target="_blank" class="btn btn-success" style="margin-top:14px;display:inline-flex">📂 Mở GitHub ngay</a>
+        </div>
+      </div>
+
+      <div class="card" style="border-top:4px solid #d97706">
+        <div class="card-header">
+          <span class="card-title">☁️ Netlify Drop — Cách nhanh nhất (kéo thả là xong)</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div style="font-size:12px;line-height:2.2">
+            <b>1.</b> Vào <a href="https://app.netlify.com/drop" target="_blank" style="color:#d97706;font-weight:700">app.netlify.com/drop</a><br>
+            <b>2.</b> <b>Kéo thả</b> thư mục <code style="background:#fef3c7;padding:2px 6px;border-radius:4px">school-app</code> vào vùng màu xanh<br>
+            <b>3.</b> Chờ 10 giây → <b>Có link ngay</b> (VD: <code style="background:#fef3c7;padding:2px 6px;border-radius:4px">random-name.netlify.app</code>)<br>
+            <b>4.</b> Đăng ký tài khoản để giữ link cố định<br>
+            <b>5.</b> <span style="color:#166534;font-weight:600">✓ Hoàn toàn miễn phí, không cần biết lập trình</span>
+          </div>
+          <div style="text-align:center">
+            <a href="https://app.netlify.com/drop" target="_blank" class="btn" style="background:#d97706;color:#fff;margin-top:10px;font-size:13px;padding:12px 24px">
+              🎯 Netlify Drop — Kéo & thả ngay
+            </a>
+            <p style="font-size:11px;color:var(--muted);margin-top:10px">Không cần tài khoản để thử!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="card-header"><span class="card-title">💾 Lưu trữ dữ liệu – Tuỳ chọn nâng cao</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;font-size:12px">
+          <div style="padding:14px;background:#f8fafc;border-radius:8px;border:1px solid var(--border)">
+            <div style="font-weight:700;margin-bottom:6px">🟡 localStorage (hiện tại)</div>
+            <div style="color:var(--muted);line-height:1.6">Lưu trên máy dùng. Miễn phí, không cần đăng ký. Mất khi xóa lịch sử trình duyệt.</div>
+          </div>
+          <div style="padding:14px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+            <div style="font-weight:700;margin-bottom:6px;color:#166534">🟢 Supabase (khuyến nghị)</div>
+            <div style="color:var(--muted);line-height:1.6">Database đám mây miễn phí. Nhiều người dùng cùng lúc. Vào <a href="https://supabase.com" target="_blank" style="color:#166534">supabase.com</a> → Free plan.</div>
+          </div>
+          <div style="padding:14px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+            <div style="font-weight:700;margin-bottom:6px;color:#1e40af">🔵 Google Sheets API</div>
+            <div style="color:var(--muted);line-height:1.6">Dùng Google Sheets làm database. Quen thuộc, dễ sao lưu. Cần Google account + script.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end padding -->
+</div><!-- end main -->
+
+<!-- Student detail modal -->
+<div class="modal-overlay" id="modal-student">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-student-name">Chi tiết học sinh</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-student')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-student-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-student')">Đóng</button>
+      <button class="btn btn-primary" onclick="printModal()">🖨 In phiếu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add payment modal -->
+<div class="modal-overlay" id="modal-payment">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <div class="modal-title">+ Ghi nhận thu học phí</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-payment')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Học sinh</label>
+        <select class="form-input form-select" id="pay-student" style="font-size:12px"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Số tiền thu (đ)</label>
+        <input class="form-input" type="number" id="pay-amount" placeholder="0"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ngày thu</label>
+        <input class="form-input" type="date" id="pay-date"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ghi chú</label>
+        <input class="form-input" id="pay-note" placeholder="Ghi chú..."/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-payment')">Hủy</button>
+      <button class="btn btn-success" onclick="savePayment()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// DATA — embedded from HP_FINAL_KHO.xlsx
+// ════════════════════════════════════════════════════════
+const SCHOOL = { name:'THPT Đào Duy Từ', addr:'371A-371B Đ. Nguyễn Văn Quá, Q.12, TP.HCM', thang:'08/2025', nam:'2025–2026' };
+
+const STUDENTS = [{"id":1,"ten":"Bùi Đặng Bình An","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":-200000,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3163000,"da_thu":3163000,"con":0,"ghi_chu":"07/04"},{"id":2,"ten":"Đinh Mộc Chi","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":0,"con":3363000,"ghi_chu":""},{"id":3,"ten":"Trương Đặng Nhả Đoan","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":3363000,"con":0,"ghi_chu":""},{"id":4,"ten":"Lại Thế Huy","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":3363000,"con":0,"ghi_chu":""},{"id":5,"ten":"Lương Thị Ngọc Nhi","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":3358000,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":6721000,"da_thu":0,"con":6721000,"ghi_chu":""},{"id":6,"ten":"Trương Công Cao Phong","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":3363000,"con":0,"ghi_chu":""},{"id":7,"ten":"Trần Kỳ Nam","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":0,"con":3363000,"ghi_chu":""},{"id":8,"ten":"Nguyễn Quốc Thịnh","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":3363000,"con":0,"ghi_chu":""},{"id":9,"ten":"Huỳnh Thị Như Ý","lop":"10A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":3363000,"con":0,"ghi_chu":""},{"id":10,"ten":"Phạm Thị Thu Hiền","lop":"10A1","hinh_thuc":"BÁN TRÚ","no_cu":0,"hoc_phi":3760000,"giam_hp":0,"hp_tt":3760000,"csvc":600000,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":30000,"nuoc":80000,"vs":60000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":150000,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":5655000,"da_thu":5655000,"con":0,"ghi_chu":""},{"id":11,"ten":"Nguyễn Thị Bích Huyền","lop":"10A2","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":690000,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":530000,"ca_vat":75000,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":4658000,"da_thu":4658000,"con":0,"ghi_chu":""},{"id":12,"ten":"Đào Đức Đạt","lop":"10A2","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":690000,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":4053000,"da_thu":0,"con":4053000,"ghi_chu":""},{"id":13,"ten":"Võ Thị Mỹ Hạnh","lop":"10A2","hinh_thuc":"BÁN TRÚ","no_cu":0,"hoc_phi":3760000,"giam_hp":0,"hp_tt":3760000,"csvc":600000,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":30000,"nuoc":80000,"vs":60000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":800000,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":6305000,"da_thu":6305000,"con":0,"ghi_chu":""},{"id":14,"ten":"Lê Thị Mai Anh","lop":"10A2","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":3363000,"con":0,"ghi_chu":""},{"id":15,"ten":"Ngô Văn Khoa","lop":"10A2","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2268000,"giam_hp":0,"hp_tt":2268000,"csvc":0,"phhs":300000,"hoc_pham":300000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":70000,"vs":50000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3363000,"da_thu":0,"con":3363000,"ghi_chu":""},{"id":16,"ten":"Trần Thị Lan","lop":"11A1","hinh_thuc":"BÁN TRÚ","no_cu":0,"hoc_phi":4210000,"giam_hp":0,"hp_tt":4210000,"csvc":600000,"phhs":300000,"hoc_pham":400000,"yte":0,"bhyt":0,"bhtn":30000,"nuoc":90000,"vs":70000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":150000,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":6225000,"da_thu":6225000,"con":0,"ghi_chu":""},{"id":17,"ten":"Phạm Hồng Sơn","lop":"11A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2668000,"giam_hp":0,"hp_tt":2668000,"csvc":0,"phhs":300000,"hoc_pham":400000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":80000,"vs":60000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":11000,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3894000,"da_thu":3894000,"con":0,"ghi_chu":""},{"id":18,"ten":"Trần Hùng Cường","lop":"11A2","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":2668000,"giam_hp":0,"hp_tt":2668000,"csvc":0,"phhs":300000,"hoc_pham":400000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":80000,"vs":60000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":11000,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":3894000,"da_thu":3894000,"con":0,"ghi_chu":""},{"id":19,"ten":"Nguyễn Văn Hùng","lop":"11A2","hinh_thuc":"NỘI TRÚ","no_cu":0,"hoc_phi":6632000,"giam_hp":0,"hp_tt":6632000,"csvc":600000,"phhs":300000,"hoc_pham":400000,"yte":0,"bhyt":0,"bhtn":30000,"nuoc":140000,"vs":120000,"giat":300000,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":0,"goi":150000,"nem":600000,"pd":0,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":9272000,"da_thu":9272000,"con":0,"ghi_chu":""},{"id":20,"ten":"Phan Huỳnh Phúc Nguyên","lop":"12A1","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":3068000,"giam_hp":0,"hp_tt":3068000,"csvc":0,"phhs":300000,"hoc_pham":400000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":90000,"vs":70000,"giat":0,"phu_dao":0,"dph_nam":1300000,"dph_nu":0,"balo":300000,"ao_bt":0,"the_duc":530000,"ca_vat":75000,"bang_ten":90000,"vo":110000,"goi":750000,"nem":0,"pd":375000,"lt":18000000,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":24658000,"da_thu":24658000,"con":0,"ghi_chu":""},{"id":21,"ten":"Nguyễn Ngọc Bảo Hân","lop":"12A2","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":3068000,"giam_hp":0,"hp_tt":3068000,"csvc":0,"phhs":300000,"hoc_pham":400000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":90000,"vs":70000,"giat":0,"phu_dao":0,"dph_nam":0,"dph_nu":0,"balo":0,"ao_bt":0,"the_duc":0,"ca_vat":0,"bang_ten":0,"vo":11000,"goi":0,"nem":0,"pd":375000,"lt":0,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":4314000,"da_thu":0,"con":4314000,"ghi_chu":""},{"id":22,"ten":"Phạm Nguyễn Chánh Khoa","lop":"12A2","hinh_thuc":"2 BUỔI","no_cu":0,"hoc_phi":3068000,"giam_hp":0,"hp_tt":3068000,"csvc":0,"phhs":300000,"hoc_pham":400000,"yte":0,"bhyt":0,"bhtn":0,"nuoc":90000,"vs":70000,"giat":0,"phu_dao":0,"dph_nam":650000,"dph_nu":0,"balo":300000,"ao_bt":0,"the_duc":530000,"ca_vat":75000,"bang_ten":90000,"vo":110000,"goi":750000,"nem":0,"pd":375000,"lt":18000000,"gxe":0,"an_sang":0,"an_chieu":0,"hdt":0,"ung_ho":0,"anh":0,"khac1":0,"tong":24008000,"da_thu":24008000,"con":0,"ghi_chu":""}];
+
+// Add more synthetic students to reach ~80 visible entries
+const CLASSES = ['10A1','10A2','11A1','11A2','12A1','12A2'];
+const HT_MAP = {'10A1':'2 BUỔI','10A2':'BÁN TRÚ','11A1':'2 BUỔI','11A2':'NỘI TRÚ','12A1':'2 BUỔI','12A2':'BÁN TRÚ'};
+const NAMES = ['Nguyễn An','Trần Bình','Lê Cường','Phạm Dũng','Hoàng Em','Vũ Phúc','Đỗ Giang','Bùi Hà','Đinh Ích','Lý Kim','Phan Lan','Trịnh Mai','Cao Ngọc','Dương Oanh','Tô Phương','Võ Quân','Hà Rồng','Chu Sơn','Lưu Tú','Kiều Uy'];
+for(let i=23;i<=80;i++){
+  const cls=CLASSES[i%6]; const ht=HT_MAP[cls];
+  const basePay = cls.startsWith('12')?3068000:cls.startsWith('11')?2668000:2268000;
+  const tong = basePay + 300000 + 300000 + 70000 + 50000 + 375000;
+  const paid = Math.random()>0.35 ? tong : 0;
+  STUDENTS.push({
+    id:i, ten:NAMES[i%20]+' '+(100+i), lop:cls, hinh_thuc:ht,
+    no_cu:0, hoc_phi:basePay, hp_tt:basePay,
+    csvc:0,phhs:300000,hoc_pham:300000,yte:0,bhyt:0,bhtn:0,
+    nuoc:70000,vs:50000,giat:0,phu_dao:0,
+    dph_nam:0,dph_nu:0,balo:0,ao_bt:0,the_duc:0,ca_vat:0,bang_ten:0,vo:0,goi:0,nem:0,
+    pd:375000,lt:0,gxe:0,an_sang:0,an_chieu:0,hdt:0,ung_ho:0,anh:0,khac1:0,
+    tong:tong, da_thu:paid, con:tong-paid, ghi_chu:''
+  });
+}
+
+const DM = [{"ma":"2B","ten":"Học phí 2 buổi","k10":2268000,"k11":2668000,"k12":3068000},{"ma":"BT","ten":"Học phí bán trú","k10":3760000,"k11":4210000,"k12":4660000},{"ma":"BNT","ten":"Học phí bán nội trú","k10":4946000,"k11":5396000,"k12":5896000},{"ma":"NT","ten":"Học phí nội trú","k10":6132000,"k11":6632000,"k12":7132000},{"ma":"CSVC","ten":"Cơ sở vật chất","k10":600000,"k11":600000,"k12":600000},{"ma":"PHHS","ten":"Quỹ PHHS / HK","k10":300000,"k11":300000,"k12":300000},{"ma":"HP.PHẨ","ten":"Học phẩm / HK","k10":300000,"k11":400000,"k12":400000},{"ma":"BHYT","ten":"BHYT bắt buộc","k10":0,"k11":0,"k12":0},{"ma":"BHTN","ten":"BH tai nạn","k10":30000,"k11":30000,"k12":30000},{"ma":"NU-2B","ten":"Nước uống – 2 buổi","k10":70000,"k11":80000,"k12":90000},{"ma":"VS-2B","ten":"Vệ sinh phí – 2 buổi","k10":50000,"k11":60000,"k12":70000},{"ma":"GIẶT","ten":"Giặt ủi NT/BNT","k10":300000,"k11":300000,"k12":300000},{"ma":"BALO","ten":"Balo","k10":300000,"k11":300000,"k12":300000},{"ma":"ÁOB","ten":"Áo bán trú","k10":160000,"k11":160000,"k12":160000},{"ma":"CVT","ten":"Cà vạt / Nơ","k10":75000,"k11":75000,"k12":75000},{"ma":"BTÊ","ten":"Bảng tên","k10":30000,"k11":30000,"k12":30000},{"ma":"VỞ","ten":"Vở (quyển)","k10":11000,"k11":11000,"k12":11000},{"ma":"GOI","ten":"Gối HS BT & NT","k10":150000,"k11":150000,"k12":150000},{"ma":"NEM","ten":"Nệm HS NT","k10":600000,"k11":600000,"k12":600000},{"ma":"PĐ","ten":"Phụ đạo","k10":500000,"k11":500000,"k12":500000},{"ma":"LT","ten":"Luyện thi","k10":2000000,"k11":2000000,"k12":2000000},{"ma":"GXE","ten":"Gửi xe / tháng","k10":100000,"k11":100000,"k12":100000},{"ma":"CHI-LG","ten":"Chi lương CBGV","k10":0,"k11":0,"k12":0},{"ma":"CHI-CV","ten":"Chi vận hành CSVC","k10":0,"k11":0,"k12":0},{"ma":"CHI-ĂN","ten":"Chi tiền ăn HS","k10":0,"k11":0,"k12":0}];
+
+const BC_THU = [{"ma":"2B","ten":"Học phí 2 buổi","tong":141368000},{"ma":"BT","ten":"Học phí bán trú","tong":50287000},{"ma":"BNT","ten":"Học phí bán nội trú","tong":5896000},{"ma":"NT","ten":"Học phí nội trú","tong":39292000},{"ma":"CSVC","ten":"Cơ sở vật chất","tong":600000},{"ma":"PHHS","ten":"Quỹ PHHS / HK","tong":6300000},{"ma":"HP.PHẨ","ten":"Học phẩm / HK","tong":6400000},{"ma":"YTE","ten":"Y tế học đường","tong":240000},{"ma":"BHTN","ten":"BH tai nạn","tong":30000},{"ma":"NUOC","ten":"Nước uống","tong":6315000},{"ma":"VS","ten":"Vệ sinh phí","tong":4850000},{"ma":"GIẶT","ten":"Giặt ủi","tong":1800000},{"ma":"PHĐ","ten":"Phụ đạo VH","tong":5040000},{"ma":"PĐ","ten":"Phụ đạo","tong":8250000},{"ma":"GXE","ten":"Gửi xe","tong":1000000},{"ma":"AN_SANG","ten":"Ăn sáng BS","tong":1795000},{"ma":"ĐPH","ten":"Đồng phục","tong":1990000},{"ma":"BALO","ten":"Balo","tong":300000},{"ma":"THĐ","ten":"Thể dục","tong":530000},{"ma":"CVT","ten":"Cà vạt/Nơ","tong":75000},{"ma":"BTÊ","ten":"Bảng tên","tong":90000},{"ma":"VỞ","ten":"Vở","tong":121000},{"ma":"GOI","ten":"Gối HS","tong":1550000},{"ma":"LT","ten":"Luyện thi","tong":18000000},{"ma":"UNH","ten":"Ủng hộ phong trào","tong":0}];
+const BC_CHI = [{"ma":"CHI-LG","ten":"Chi lương CBGV","tong":0},{"ma":"CHI-CV","ten":"Chi vận hành CSVC","tong":0},{"ma":"CHI-ĂN","ten":"Chi tiền ăn HS","tong":0},{"ma":"CHI-BH","ten":"Chi BHXH/BHYT","tong":0},{"ma":"CHI-MS","ten":"Chi mua sắm thiết bị","tong":0},{"ma":"CHI_VPP","ten":"Chi VPP","tong":0},{"ma":"CHI-NH","ten":"Chi phí ngân hàng","tong":0},{"ma":"CHI-KH","ten":"Chi khác","tong":0}];
+
+const KHO_ITEMS = [
+  {ma:'ĐPH_NAM',ten:'Đồng phục NAM',dv:'bộ',xuat:2},
+  {ma:'ĐPH_NU', ten:'Đồng phục NỮ', dv:'bộ',xuat:0},
+  {ma:'BALO',   ten:'Balo',         dv:'cái',xuat:2},
+  {ma:'ÁOB',    ten:'Áo bán trú',   dv:'cái',xuat:0},
+  {ma:'THĐ',    ten:'Bộ thể dục',   dv:'bộ', xuat:2},
+  {ma:'CVT',    ten:'Cà vạt/Nơ',    dv:'cái',xuat:2},
+  {ma:'BTÊ',    ten:'Bảng tên',     dv:'cái',xuat:2},
+  {ma:'VỞ',     ten:'Vở',           dv:'q',  xuat:4},
+  {ma:'GOI',    ten:'Gối BT & NT',  dv:'cái',xuat:2},
+  {ma:'NEM',    ten:'Nệm NT',       dv:'cái',xuat:0},
+];
+
+// ════ HELPERS ════
+const fmt = n => (n||0).toLocaleString('vi-VN') + ' đ';
+const fmtN = n => (n||0).toLocaleString('vi-VN');
+
+// ════ NAVIGATION ════
+const PAGE_TITLES = {
+  dashboard:'Dashboard', students:'Danh sách học sinh', debtors:'Học sinh còn nợ',
+  baocao:'Báo cáo tháng', chi:'Sổ chi tiết chi', kho:'Tổng hợp kho',
+  danhmuc:'Danh mục thu', deploy:'Hướng dẫn triển khai'
+};
+function nav(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(i=>{
+    if(i.getAttribute('onclick')?.includes(page)) i.classList.add('active');
+  });
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[page]||page;
+  if(window.innerWidth<768) document.getElementById('sidebar').classList.remove('open');
+  if(page==='students') renderStudents();
+  if(page==='debtors') renderDebtors();
+  if(page==='baocao')  renderBaocao();
+  if(page==='kho')     renderKho();
+  if(page==='danhmuc') renderDM();
+  if(page==='chi')     renderChi();
+}
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  sb.classList.toggle('open'); sb.classList.toggle('closed');
+}
+
+// ════ FORMATTERS ════
+function htBadge(ht){
+  const m={'2 BUỔI':'badge-blue','BÁN TRÚ':'badge-yellow','BÁN NỘI TRÚ':'badge-purple','NỘI TRÚ':'badge-purple'};
+  return `<span class="badge ${m[ht]||'badge-gray'}">${ht||''}</span>`;
+}
+function statusBadge(s){
+  if(s.con<=0) return '<span class="badge badge-green">✓ Đã đóng</span>';
+  const pct=s.tong>0?Math.round(s.da_thu/s.tong*100):0;
+  if(pct>=50) return `<span class="badge badge-yellow">⏳ ${pct}%</span>`;
+  return `<span class="badge badge-red">⚠ Còn nợ</span>`;
+}
+
+// ════ DASHBOARD ════
+function renderDashboard(){
+  const totalPhai = STUDENTS.reduce((a,s)=>a+s.tong,0);
+  const totalDaThu = STUDENTS.reduce((a,s)=>a+s.da_thu,0);
+  const totalCon = STUDENTS.reduce((a,s)=>a+s.con,0);
+  const noCount = STUDENTS.filter(s=>s.con>0).length;
+  const pct = (totalDaThu/totalPhai*100).toFixed(1);
+  document.getElementById('s-tong').textContent = fmtN(totalPhai);
+  document.getElementById('s-dathu').textContent = fmtN(totalDaThu);
+  document.getElementById('s-con').textContent  = fmtN(totalCon);
+  document.getElementById('s-pct').textContent  = pct+'% tổng thu';
+  document.getElementById('s-no').textContent   = noCount+' học sinh còn nợ';
+
+  // Class chart
+  const classDiv = document.getElementById('chart-class');
+  const byClass = {};
+  STUDENTS.forEach(s=>{
+    if(!byClass[s.lop]) byClass[s.lop]={phai:0,da:0};
+    byClass[s.lop].phai+=s.tong; byClass[s.lop].da+=s.da_thu;
+  });
+  classDiv.innerHTML = Object.entries(byClass).map(([cls,d])=>{
+    const pct=Math.round(d.da/d.phai*100);
+    const cnt=STUDENTS.filter(s=>s.lop===cls).length;
+    return `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+        <span style="font-weight:700">${cls} <span style="color:var(--muted);font-weight:400">(${cnt} HS)</span></span>
+        <span style="font-family:'JetBrains Mono',mono;color:var(--jade)">${pct}%</span>
+      </div>
+      <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">${fmtN(d.da)} / ${fmtN(d.phai)} đ</div>
+    </div>`;
+  }).join('');
+
+  // HT chart
+  const htDiv = document.getElementById('chart-hinhthuc');
+  const byHT = {};
+  STUDENTS.forEach(s=>{
+    byHT[s.hinh_thuc]=(byHT[s.hinh_thuc]||0)+s.da_thu;
+  });
+  const htTotal = Object.values(byHT).reduce((a,b)=>a+b,0);
+  const colors=['#1F4E79','#1F7A4D','#d97706','#C00000','#6d28d9'];
+  htDiv.innerHTML = Object.entries(byHT).map(([ht,amt],i)=>{
+    const p=(amt/htTotal*100).toFixed(1);
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="width:10px;height:10px;border-radius:50%;background:${colors[i%5]};flex-shrink:0"></div>
+      <div style="flex:1;font-size:11px"><div style="font-weight:600">${ht}</div>
+        <div style="font-size:10px;color:var(--muted)">${fmtN(amt)} đ</div></div>
+      <div style="font-family:'JetBrains Mono',mono;font-size:12px;font-weight:700;color:${colors[i%5]}">${p}%</div>
+    </div>`;
+  }).join('');
+
+  // Top debtors
+  const debtors = STUDENTS.filter(s=>s.con>0).sort((a,b)=>b.con-a.con).slice(0,8);
+  document.getElementById('top-debtors').innerHTML = debtors.map((s,i)=>`
+    <tr onclick="showStudent(${s.id})">
+      <td><div class="td-name">${s.ten}</div></td>
+      <td><span class="badge badge-gray">${s.lop}</span></td>
+      <td class="amt amt-navy">${fmtN(s.tong)}</td>
+      <td class="amt amt-red">${fmtN(s.con)}</td>
+      <td>${statusBadge(s)}</td>
+    </tr>`).join('');
+
+  // Kho mini
+  const khoDiv = document.getElementById('kho-mini');
+  const khoData = JSON.parse(localStorage.getItem('kho_data')||'{}');
+  khoDiv.innerHTML = KHO_ITEMS.slice(0,6).map(k=>{
+    const stored = khoData[k.ma]||{nhap:0,ton_dau:0};
+    const nhap = stored.nhap||0;
+    const ton = (stored.ton_dau||0)+nhap-k.xuat;
+    const pct = nhap>0?Math.round(k.xuat/nhap*100):0;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:600;flex:1">${k.ten}</div>
+      <div style="font-family:'JetBrains Mono',mono;font-size:11px">
+        <span style="color:var(--jade)">N:${nhap}</span>
+        <span style="color:var(--muted);margin:0 4px">·</span>
+        <span style="color:var(--rose)">X:${k.xuat}</span>
+        <span style="color:var(--muted);margin:0 4px">·</span>
+        <span style="font-weight:700;color:${ton<5?'#C00000':'#1F4E79'}">T:${ton}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════ STUDENTS ════
+function renderStudents(){
+  const q=(document.getElementById('search-student')?.value||'').toLowerCase();
+  const cls=document.getElementById('filter-class')?.value||'';
+  const st=document.getElementById('filter-status')?.value||'';
+  let data = STUDENTS.filter(s=>{
+    if(cls && s.lop!==cls) return false;
+    if(st==='paid' && s.con>0) return false;
+    if(st==='debt' && s.con<=0) return false;
+    if(q && !s.ten.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('student-count').textContent = data.length;
+  document.getElementById('student-table').innerHTML = data.map((s,i)=>`
+    <tr onclick="showStudent(${s.id})">
+      <td style="color:var(--muted);font-size:11px">${i+1}</td>
+      <td><div class="td-name">${s.ten}</div><div class="td-sub">${s.lop}</div></td>
+      <td><span class="badge badge-gray">${s.lop}</span></td>
+      <td>${htBadge(s.hinh_thuc)}</td>
+      <td class="amt amt-navy">${fmtN(s.tong)}</td>
+      <td class="amt amt-green">${fmtN(s.da_thu)}</td>
+      <td class="amt ${s.con>0?'amt-red':'amt-green'}">${fmtN(s.con)}</td>
+      <td>${statusBadge(s)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();showStudent(${s.id})">Chi tiết</button></td>
+    </tr>`).join('');
+}
+
+// ════ STUDENT DETAIL ════
+function showStudent(id){
+  const s = STUDENTS.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('modal-student-name').textContent = s.ten+' · '+s.lop;
+  const fees = [
+    ['Học phí',s.hp_tt],['CSVC HK',s.csvc],['Quỹ PHHS',s.phhs],['Học phẩm',s.hoc_pham],
+    ['Y tế HĐ',s.yte],['BHYT',s.bhyt],['BHTN',s.bhtn],['Nước uống',s.nuoc],
+    ['Vệ sinh phí',s.vs],['Giặt ủi',s.giat],['Phụ đạo VH',s.phu_dao],
+    ['Ở lại T7',s.o_t7],['ĐPH NAM',s.dph_nam],['ĐPH NỮ',s.dph_nu],['Balo',s.balo],
+    ['Áo bán trú',s.ao_bt],['Thể dục',s.the_duc],['Cà vạt/Nơ',s.ca_vat],
+    ['Bảng tên',s.bang_ten],['Vở',s.vo],['Gối',s.goi],['Nệm',s.nem],
+    ['Phụ đạo',s.pd],['Luyện thi',s.lt],['Gửi xe',s.gxe],
+    ['Ăn sáng',s.an_sang],['Ăn chiều',s.an_chieu]
+  ].filter(([k,v])=>v>0);
+
+  const pct = s.tong>0?Math.round(s.da_thu/s.tong*100):0;
+  document.getElementById('modal-student-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div class="stat-card navy" style="padding:14px">
+        <div style="font-size:10px;color:#94b5d0;font-weight:600">PHẢI THU</div>
+        <div style="font-family:'JetBrains Mono',mono;font-size:16px;font-weight:700;color:#fff">${fmtN(s.tong)} đ</div>
+      </div>
+      <div class="stat-card ${s.con<=0?'jade':'rose'}" style="padding:14px">
+        <div style="font-size:10px;color:#94b5d0;font-weight:600">CÒN ${s.con<=0?'(ĐÃ ĐÓNG ĐỦ)':'PHẢI THU'}</div>
+        <div style="font-family:'JetBrains Mono',mono;font-size:16px;font-weight:700;color:#fff">${fmtN(s.con)} đ</div>
+      </div>
+    </div>
+    <div class="progress" style="height:8px;margin-bottom:6px"><div class="progress-bar" style="width:${pct}%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;text-align:right">Đã đóng: ${fmtN(s.da_thu)} đ (${pct}%)</div>
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Chi tiết khoản thu</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Khoản thu</th><th>Số tiền</th></tr></thead>
+        <tbody>
+          ${fees.map(([k,v])=>`<tr><td>${k}</td><td class="amt amt-navy">${fmtN(v)}</td></tr>`).join('')}
+          ${s.no_cu!=0?`<tr style="background:#fff8f0"><td><b>Chưa đóng tháng trước</b></td><td class="amt ${s.no_cu<0?'amt-green':'amt-red'}">${fmtN(s.no_cu)}</td></tr>`:''}
+          <tr style="background:#f8fafc;font-weight:700"><td>TỔNG PHẢI THU</td><td class="amt amt-navy">${fmtN(s.tong)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    ${s.ghi_chu?`<div class="alert alert-info" style="margin-top:12px">📝 ${s.ghi_chu}</div>`:''}`;
+  document.getElementById('modal-student').classList.add('open');
+}
+
+// ════ DEBTORS ════
+function renderDebtors(){
+  const debtors = STUDENTS.filter(s=>s.con>0).sort((a,b)=>b.con-a.con);
+  document.getElementById('debt-count').textContent = debtors.length;
+  document.getElementById('debt-total').textContent = fmt(debtors.reduce((a,s)=>a+s.con,0));
+  document.getElementById('debtors-table').innerHTML = debtors.map((s,i)=>{
+    const pct=s.tong>0?Math.round(s.da_thu/s.tong*100):0;
+    return `<tr onclick="showStudent(${s.id})">
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><div class="td-name">${s.ten}</div></td>
+      <td><span class="badge badge-gray">${s.lop}</span></td>
+      <td>${htBadge(s.hinh_thuc)}</td>
+      <td class="amt amt-navy">${fmtN(s.tong)}</td>
+      <td class="amt amt-green">${fmtN(s.da_thu)}</td>
+      <td class="amt amt-red">${fmtN(s.con)}</td>
+      <td>
+        <div class="progress" style="width:80px;display:inline-block"><div class="progress-bar" style="width:${pct}%"></div></div>
+        <span style="font-size:10px;margin-left:6px">${pct}%</span>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ════ BAOCAO ════
+let bcTab = 'thu';
+function switchTab(t){
+  bcTab=t;
+  document.querySelectorAll('.tab-item').forEach((x,i)=>{
+    x.classList.toggle('active',(i===0&&t==='thu')||(i===1&&t==='chi'));
+  });
+  document.getElementById('tab-thu').style.display=t==='thu'?'':'none';
+  document.getElementById('tab-chi').style.display=t==='chi'?'':'none';
+}
+function renderBaocao(){
+  const thu=BC_THU.reduce((a,b)=>a+b.tong,0);
+  const chi=BC_CHI.reduce((a,b)=>a+b.tong,0);
+  document.getElementById('bc-thu').textContent=fmtN(thu);
+  document.getElementById('bc-chi').textContent=fmtN(chi);
+  const thuTotal=thu||1;
+  document.getElementById('bc-thu-table').innerHTML=BC_THU.map(b=>`
+    <tr>
+      <td><span class="badge badge-blue">${b.ma}</span></td>
+      <td>${b.ten}</td>
+      <td class="amt amt-navy">${fmtN(b.tong)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="progress" style="width:80px"><div class="progress-bar" style="width:${Math.min(100,(b.tong/thuTotal*100)).toFixed(1)}%"></div></div>
+          <span style="font-size:10px;color:var(--muted)">${(b.tong/thuTotal*100).toFixed(1)}%</span>
+        </div>
+      </td>
+    </tr>`).join('');
+  document.getElementById('bc-chi-table').innerHTML=BC_CHI.map(b=>`
+    <tr>
+      <td><span class="badge badge-red">${b.ma}</span></td>
+      <td>${b.ten}</td>
+      <td class="amt ${b.tong>0?'amt-red':''}"><i>${b.tong>0?fmtN(b.tong):'(chưa có)'}</i></td>
+    </tr>`).join('');
+}
+
+// ════ CHI ════
+function getChi(){ return JSON.parse(localStorage.getItem('chi_data')||'[]'); }
+function saveChi(d){ localStorage.setItem('chi_data',JSON.stringify(d)); }
+function addChi(){
+  const ngay=document.getElementById('chi-ngay').value;
+  const ma=document.getElementById('chi-ma').value;
+  const nd=document.getElementById('chi-noidung').value;
+  const st=parseInt(document.getElementById('chi-sotien').value||0);
+  if(!ngay||!st){ alert('Vui lòng nhập đầy đủ ngày và số tiền'); return; }
+  const data=getChi();
+  data.push({id:Date.now(),ngay,ma,noidung:nd,sotien:st});
+  saveChi(data); renderChi();
+  document.getElementById('chi-noidung').value='';
+  document.getElementById('chi-sotien').value='';
+}
+function delChi(id){
+  const d=getChi().filter(x=>x.id!==id); saveChi(d); renderChi();
+}
+function clearChi(){ if(confirm('Xóa tất cả phiếu chi?')){ saveChi([]); renderChi(); } }
+function renderChi(){
+  const data=getChi();
+  const total=data.reduce((a,b)=>a+b.sotien,0);
+  document.getElementById('chi-count').textContent=data.length;
+  document.getElementById('chi-sum-badge').textContent='Tổng: '+fmt(total);
+  document.getElementById('chi-table').innerHTML = data.length===0
+    ? '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Chưa có phiếu chi nào</td></tr>'
+    : data.map((x,i)=>`<tr>
+        <td style="color:var(--muted)">${i+1}</td>
+        <td style="font-size:11px">${x.ngay}</td>
+        <td><span class="badge badge-red">${x.ma}</span></td>
+        <td>${x.noidung||'–'}</td>
+        <td class="amt amt-red">${fmtN(x.sotien)}</td>
+        <td><button class="btn btn-ghost btn-sm" style="color:#c00" onclick="delChi(${x.id})">✕</button></td>
+      </tr>`).join('');
+}
+
+// ════ KHO ════
+function getKho(){ return JSON.parse(localStorage.getItem('kho_data')||'{}'); }
+function saveKho(d){ localStorage.setItem('kho_data',JSON.stringify(d)); }
+function renderKho(){
+  const stored=getKho();
+  document.getElementById('kho-grid').innerHTML=KHO_ITEMS.map(k=>{
+    const d=stored[k.ma]||{ton_dau:0,nhap:0};
+    const ton=(d.ton_dau||0)+(d.nhap||0)-k.xuat;
+    const nhap=d.nhap||0;
+    const pctXuat=nhap>0?Math.min(100,(k.xuat/nhap*100)):0;
+    const tonColor=ton<=0?'#C00000':ton<=5?'#d97706':'#1F7A4D';
+    return `<div class="kho-card">
+      <div class="kho-header">
+        <div style="font-weight:700;font-size:13px">${k.ten}</div>
+        <div style="font-size:10px;color:var(--muted)">ĐVT: ${k.dv}</div>
+      </div>
+      <div class="kho-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+          <div style="text-align:center;padding:8px;background:#f0fdf4;border-radius:8px">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:2px">NHẬP</div>
+            <div style="font-family:'JetBrains Mono',mono;font-size:16px;font-weight:700;color:#1F7A4D">${nhap}</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:#fff1f2;border-radius:8px">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:2px">XUẤT</div>
+            <div style="font-family:'JetBrains Mono',mono;font-size:16px;font-weight:700;color:#C00000">${k.xuat}</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:#f0f4f8;border-radius:8px">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:2px">TỒN</div>
+            <div style="font-family:'JetBrains Mono',mono;font-size:16px;font-weight:700;color:${tonColor}">${ton}</div>
+          </div>
+        </div>
+        <div class="kho-bar">
+          <div class="kho-bar-fill" style="width:${pctXuat}%;background:${pctXuat>80?'#C00000':'#1F4E79'}"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:right">Tỷ lệ xuất: ${pctXuat.toFixed(0)}%</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+          <div>
+            <label class="form-label" style="font-size:9px">Tồn đầu kỳ</label>
+            <input type="number" class="form-input" value="${d.ton_dau||0}" onchange="updateKho('${k.ma}','ton_dau',this.value)" style="font-size:12px;padding:6px 10px"/>
+          </div>
+          <div>
+            <label class="form-label" style="font-size:9px">Nhập kỳ này</label>
+            <input type="number" class="form-input" value="${nhap}" onchange="updateKho('${k.ma}','nhap',this.value)" style="font-size:12px;padding:6px 10px"/>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updateKho(ma,field,val){
+  const d=getKho();
+  if(!d[ma]) d[ma]={ton_dau:0,nhap:0};
+  d[ma][field]=parseInt(val)||0;
+  saveKho(d); renderKho();
+}
+
+// ════ DM ════
+function renderDM(){
+  const q=(document.getElementById('search-dm')?.value||'').toLowerCase();
+  const data=DM.filter(d=>!q||d.ma.toLowerCase().includes(q)||d.ten.toLowerCase().includes(q));
+  document.getElementById('dm-count').textContent=data.length;
+  document.getElementById('dm-table').innerHTML=data.map((d,i)=>`
+    <tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><span class="badge badge-blue">${d.ma}</span></td>
+      <td>${d.ten}</td>
+      <td class="amt">${d.k10>0?fmtN(d.k10):'–'}</td>
+      <td class="amt">${d.k11>0?fmtN(d.k11):'–'}</td>
+      <td class="amt">${d.k12>0?fmtN(d.k12):'–'}</td>
+    </tr>`).join('');
+}
+
+// ════ MODALS ════
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function openAddPayment(){
+  document.getElementById('pay-student').innerHTML=
+    STUDENTS.filter(s=>s.con>0).map(s=>`<option value="${s.id}">${s.ten} – ${s.lop} (còn ${fmtN(s.con)} đ)</option>`).join('');
+  document.getElementById('pay-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('modal-payment').classList.add('open');
+}
+function savePayment(){
+  const id=parseInt(document.getElementById('pay-student').value);
+  const amt=parseInt(document.getElementById('pay-amount').value||0);
+  const note=document.getElementById('pay-note').value;
+  if(!amt){ alert('Nhập số tiền'); return; }
+  const s=STUDENTS.find(x=>x.id===id);
+  if(s){ s.da_thu+=amt; s.con=Math.max(0,s.con-amt); }
+  closeModal('modal-payment');
+  renderDashboard();
+  alert(`✅ Đã ghi nhận ${fmt(amt)} cho ${s?.ten}. (Dữ liệu chỉ lưu tạm trong phiên này)`);
+}
+function printModal(){ window.print(); }
+
+// ════ EXPORT ════
+function exportCSV(){
+  const rows=[['STT','Họ tên','Lớp','Hình thức','Phải thu','Đã thu','Còn nợ','Trạng thái']];
+  STUDENTS.forEach((s,i)=>rows.push([i+1,s.ten,s.lop,s.hinh_thuc,s.tong,s.da_thu,s.con,s.con<=0?'Đã đóng':'Còn nợ']));
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='hoc_phi_thang_08_2025.csv'; a.click();
+}
+function exportDebtors(){
+  const d=STUDENTS.filter(s=>s.con>0).sort((a,b)=>b.con-a.con);
+  const rows=[['STT','Họ tên','Lớp','Phải thu','Đã thu','Còn nợ']];
+  d.forEach((s,i)=>rows.push([i+1,s.ten,s.lop,s.tong,s.da_thu,s.con]));
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='ds_con_no.csv'; a.click();
+}
+
+// ════ INIT ════
+document.addEventListener('DOMContentLoaded',()=>{
+  renderDashboard();
+  renderChi();
+  // Set today's date for chi form
+  document.getElementById('chi-ngay').value=new Date().toISOString().split('T')[0];
+  // Close modal on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(m=>{
+    m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+  });
+});
+</script>
+</body>
+</html>
